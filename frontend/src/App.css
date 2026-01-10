@@ -40,7 +40,8 @@ h3 {
   margin-bottom: 24px;
 }
 
-input, select {
+input,
+select {
   width: 100%;
   padding: 14px 16px;
   margin: 8px 0 16px 0;
@@ -52,7 +53,8 @@ input, select {
   color: #1e3a5f;
 }
 
-input:focus, select:focus {
+input:focus,
+select:focus {
   outline: none;
   border-color: #2563eb;
   background: white;
@@ -289,12 +291,35 @@ button:disabled {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.grade-S { background: #0ea5e9; color: white; }
-.grade-A { background: #2563eb; color: white; }
-.grade-B { background: #3b82f6; color: white; }
-.grade-C { background: #60a5fa; color: white; }
-.grade-D { background: #93c5fd; color: #1e40af; }
-.grade-F { background: #bfdbfe; color: #1e40af; }
+.grade-S {
+  background: #0ea5e9;
+  color: white;
+}
+
+.grade-A {
+  background: #2563eb;
+  color: white;
+}
+
+.grade-B {
+  background: #3b82f6;
+  color: white;
+}
+
+.grade-C {
+  background: #60a5fa;
+  color: white;
+}
+
+.grade-D {
+  background: #93c5fd;
+  color: #1e40af;
+}
+
+.grade-F {
+  background: #bfdbfe;
+  color: #1e40af;
+}
 
 /* Status Badges */
 .status-badge {
@@ -488,42 +513,276 @@ button:disabled {
   display: flex;
   align-items: center;
   justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 40px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.home-container::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  animation: float 20s infinite ease-in-out;
+}
+
+.home-container::after {
+  content: '';
+  position: absolute;
+  bottom: -50%;
+  left: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+  animation: float 25s infinite ease-in-out reverse;
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(50px, 50px);
+  }
+}
+
+.home-content {
+  max-width: 1200px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.home-header {
+  text-align: center;
+  margin-bottom: 60px;
+  animation: fadeInDown 0.8s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.logo-circle {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 24px;
   background: white;
-  padding: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  animation: pulse 2s infinite;
+}
+
+.logo-circle svg {
+  width: 50px;
+  height: 50px;
+  color: #667eea;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.home-title {
+  font-size: 48px;
+  font-weight: 800;
+  color: white;
+  margin: 0 0 16px 0;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  letter-spacing: -1px;
+}
+
+.home-subtitle {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  font-weight: 400;
 }
 
 .login-options {
-  display: flex;
-  gap: 24px;
-  max-width: 600px;
-  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+  animation: fadeInUp 0.8s ease-out 0.2s both;
 }
 
-.login-btn {
-  flex: 1;
-  padding: 18px 32px;
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  color: white;
-  border: none;
-  border-radius: 0;
-  font-size: 16px;
-  font-weight: 600;
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-card {
+  background: white;
+  border-radius: 20px;
+  padding: 40px 32px;
+  text-align: center;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+
+.login-card:hover::before {
+  transform: scaleX(1);
+}
+
+.login-card:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+}
+
+.card-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 24px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s ease;
+}
+
+.login-card:hover .card-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.card-icon svg {
+  width: 40px;
+  height: 40px;
+  color: white;
+}
+
+.faculty-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.student-gradient {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  box-shadow: 0 8px 20px rgba(240, 147, 251, 0.4);
+}
+
+.register-gradient {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4);
+}
+
+.login-card h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e3a5f;
+  margin: 0 0 12px 0;
+}
+
+.login-card p {
+  font-size: 14px;
+  color: #64748b;
   margin: 0;
+  line-height: 1.6;
+}
+
+.register-card::before {
+  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.login-btn.register-variant {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  box-shadow: 0 4px 6px rgba(5, 150, 105, 0.2);
+}
+
+.login-btn.register-variant:hover {
+  background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+  box-shadow: 0 8px 16px rgba(5, 150, 105, 0.3);
+}
+
+.back-btn {
+  background: transparent;
+  color: #2563eb;
+  border: 2px solid #2563eb;
+  padding: 10px 20px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  font-weight: 600;
   width: auto;
+  box-shadow: none;
 }
 
-.login-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
-  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+.back-btn:hover {
+  background: #eff6ff;
+  transform: translateX(-2px);
+  box-shadow: none;
 }
 
-.login-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+.login-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.login-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.faculty-icon {
+  background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+}
+
+.student-icon {
+  background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
 }
 
 /* Register Student Section */
@@ -641,8 +900,8 @@ button:disabled {
   line-height: 1.4;
 }
 
-.form-group input:focus + .field-hint,
-.form-group input:hover + .field-hint {
+.form-group input:focus+.field-hint,
+.form-group input:hover+.field-hint {
   color: #2563eb;
 }
 
@@ -661,34 +920,36 @@ button:disabled {
     width: 100%;
   }
 
-  .container, .dashboard {
+  .container,
+  .dashboard {
     margin: 20px;
     border-radius: 0;
   }
-  
+
   .dashboard-header {
     padding: 20px;
     flex-direction: column;
     gap: 15px;
     text-align: center;
   }
-  
-  .marks-section, .faculty-content {
+
+  .marks-section,
+  .faculty-content {
     padding: 20px;
   }
-  
+
   .performance-summary {
     grid-template-columns: 1fr;
   }
-  
+
   .form-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .marks-table-container {
     overflow-x: auto;
   }
-  
+
   .marks-table {
     min-width: 500px;
   }
