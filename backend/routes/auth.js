@@ -1,6 +1,9 @@
 const express = require("express");
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { authenticateToken } = require("../middleware/auth");
+require("dotenv").config();
 
 const router = express.Router();
 
@@ -34,8 +37,18 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ error: "Invalid email or password" });
     }
 
+    const token = jwt.sign(
+      { id: user._id, email: user.email, role: user.role },
+      process.env.JWT_SECRET || 'fallback_secret_key',
+      { expiresIn: '24h' }
+    );
+    
     const { password: _, ...userWithoutPassword } = user.toObject();
-    res.json({ user: userWithoutPassword, message: "Login successful" });
+    res.json({ 
+      user: userWithoutPassword, 
+      token,
+      message: "Login successful" 
+    });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -87,10 +100,17 @@ router.post("/register", async (req, res) => {
 
     console.log("✅ User registered successfully:", user.email);
     
+    const token = jwt.sign(
+      { id: user._id, email: user.email, role: user.role },
+      process.env.JWT_SECRET || 'fallback_secret_key',
+      { expiresIn: '24h' }
+    );
+    
     const { password: _, ...userWithoutPassword } = user.toObject();
     res.status(201).json({ 
       message: "User registered successfully", 
-      user: userWithoutPassword 
+      user: userWithoutPassword,
+      token
     });
     
   } catch (error) {
@@ -107,7 +127,7 @@ router.post("/register", async (req, res) => {
 });
 
 
-router.get("/users", async (req, res) => {
+router.get("/users", authenticateToken, async (req, res) => {
   try {
     const users = await User.find({}, { password: 0 }); 
     res.json(users);
@@ -118,7 +138,7 @@ router.get("/users", async (req, res) => {
 });
 
 
-router.get("/students", async (req, res) => {
+router.get("/students", authenticateToken, async (req, res) => {
   try {
     const students = await User.find({ role: "student" }, { password: 0 });
     res.json(students);
@@ -129,9 +149,15 @@ router.get("/students", async (req, res) => {
 });
 
 
-router.get("/my-students/:facultyId", async (req, res) => {
+router.get("/my-students/:facultyId", authenticateToken, async (req, res) => {
   try {
     const { facultyId } = req.params;
+    
+    // Ensure the requesting user can only access their own students
+    if (req.user.id.toString() !== facultyId.toString()) {
+      return res.status(403).json({ error: "Access forbidden: Cannot access other faculty's students" });
+    }
+    
     const students = await User.find({ role: "student", facultyId }, { password: 0 });
     res.json(students);
   } catch (error) {
@@ -141,7 +167,7 @@ router.get("/my-students/:facultyId", async (req, res) => {
 });
 
 
-router.post("/register-student", async (req, res) => {
+router.post("/register-student", authenticateToken, async (req, res) => {
   try {
     const { name, email, password, facultyId } = req.body;
 
@@ -171,8 +197,18 @@ router.post("/register-student", async (req, res) => {
 
     await student.save();
     
+    const token = jwt.sign(
+      { id: student._id, email: student.email, role: student.role },
+      process.env.JWT_SECRET || 'fallback_secret_key',
+      { expiresIn: '24h' }
+    );
+    
     const { password: _, ...studentWithoutPassword } = student.toObject();
-    res.json({ student: studentWithoutPassword, message: "Student registered successfully" });
+    res.json({ 
+      student: studentWithoutPassword, 
+      token,
+      message: "Student registered successfully" 
+    });
   } catch (error) {
     console.error("Student registration error:", error);
     res.status(500).json({ error: "Internal server error" });

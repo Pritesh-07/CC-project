@@ -8,7 +8,7 @@ function App() {
 
   if (!user) return <Home />;
   if (user.role === "student") return <StudentDashboard user={user} />;
-  return <FacultyDashboard />;
+  return <FacultyDashboard user={user} />;
 }
 
 export default App;

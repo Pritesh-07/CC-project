@@ -1,7 +1,7 @@
-import axios from "axios";
+import api from "../utils/api";
 import { useState, useEffect } from "react";
 
-export default function ClassAnalytics() {
+export default function ClassAnalytics({ user }) {
   const [analyticsData, setAnalyticsData] = useState({
     'C1': null,
     'C2': null,
@@ -9,8 +9,6 @@ export default function ClassAnalytics() {
   });
   const [loading, setLoading] = useState(true);
   const [selectedCourse, setSelectedCourse] = useState('C1');
-
-  const user = JSON.parse(localStorage.getItem("user"));
   const courses = [
     { code: 'C1', name: 'Mathematics' },
     { code: 'C2', name: 'Physics' },
@@ -25,7 +23,7 @@ export default function ClassAnalytics() {
     setLoading(true);
     try {
       const promises = courses.map(course => 
-        axios.get(`http://localhost:3001/api/marks/faculty-stats/${course.code}/${user._id}`)
+        api.get(`/marks/faculty-stats/${course.code}/${user._id}`)
       );
       
       const results = await Promise.all(promises);

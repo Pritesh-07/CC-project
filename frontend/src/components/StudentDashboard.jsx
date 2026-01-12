@@ -1,16 +1,17 @@
-import axios from "axios";
+import api from "../utils/api";
 import { useEffect, useState } from "react";
 
 export default function StudentDashboard({ user }) {
   const [marks, setMarks] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://localhost:3001/api/marks/student/${user._id}`)
+    api.get(`/marks/student/${user._id}`)
       .then(res => setMarks(res.data));
   }, []);
 
   const logout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("token");
     window.location.reload();
   };
 

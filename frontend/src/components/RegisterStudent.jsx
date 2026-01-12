@@ -1,7 +1,7 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
+import api from "../utils/api";
 
-export default function RegisterStudent() {
+export default function RegisterStudent({ user }) {
   const [studentData, setStudentData] = useState({
     name: '',
     email: '',
@@ -11,8 +11,6 @@ export default function RegisterStudent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-
-  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     if (!user) {
@@ -30,7 +28,7 @@ export default function RegisterStudent() {
     if (!user || !user._id) return;
     
     try {
-      const res = await axios.get(`http://localhost:3001/api/auth/my-students/${user._id}`);
+      const res = await api.get(`/auth/my-students/${user._id}`);
       setStudents(res.data);
     } catch (err) {
       console.error("Error fetching students:", err);
@@ -95,7 +93,7 @@ export default function RegisterStudent() {
         facultyId: user._id
       };
       
-      const response = await axios.post("http://localhost:3001/api/auth/register-student", requestData);
+      const response = await api.post("/auth/register-student", requestData);
       
       setSuccess('Student registered successfully!');
       setStudentData({ name: '', email: '', password: 'student123' });

@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../utils/api";
 import { useState, useEffect } from "react";
 
 export default function AddMarks({ user }) {
@@ -20,7 +20,7 @@ export default function AddMarks({ user }) {
 
   const fetchStudents = async () => {
     try {
-      const res = await axios.get(`http://localhost:3001/api/auth/my-students/${user._id}`);
+      const res = await api.get(`/auth/my-students/${user._id}`);
       setStudents(res.data);
     } catch (err) {
       console.error("Error fetching students:", err);
@@ -44,7 +44,7 @@ export default function AddMarks({ user }) {
 
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:3001/api/marks/add", {
+      const response = await api.post("/marks/add", {
         studentEmail: data.studentEmail,
         course: data.course,
         marks: marksNum,

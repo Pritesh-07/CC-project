@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../utils/api";
 import { useState } from "react";
 
 export default function FacultyLogin({ onBack }) {
@@ -17,7 +17,7 @@ export default function FacultyLogin({ onBack }) {
     setError("");
 
     try {
-      const res = await axios.post("http://localhost:3001/api/auth/login", {
+      const res = await api.post("/auth/login", {
         email, password, role: "faculty"
       });
 
@@ -26,7 +26,9 @@ export default function FacultyLogin({ onBack }) {
         return;
       }
 
+      // Store user data and token
       localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("token", res.data.token); // Store the JWT token
       window.location.reload();
     } catch (err) {
       setError(err.response?.data?.error || "Login failed. Please try again.");

@@ -1,9 +1,10 @@
 const express = require("express");
 const Marks = require("../models/Marks");
+const { authenticateToken } = require("../middleware/auth");
 
 const router = express.Router();
 
-router.post("/add", async (req, res) => {
+router.post("/add", authenticateToken, async (req, res) => {
   try {
     const { studentEmail, course, marks, grade } = req.body;
     
@@ -56,9 +57,26 @@ router.post("/add", async (req, res) => {
   }
 });
 
-router.get("/student/:id", async (req, res) => {
+router.get("/student/:id", authenticateToken, async (req, res) => {
   try {
-    const data = await Marks.find({ studentId: req.params.id });
+    const requestedStudentId = req.params.id;
+    
+    // Allow students to access their own marks, or faculty to access their students' marks
+    if (req.user.role === 'student') {
+      // Students can only access their own marks
+      if (req.user.id.toString() !== requestedStudentId.toString()) {
+        return res.status(403).json({ error: "Access forbidden: Cannot access other students' marks" });
+      }
+    } else if (req.user.role === 'faculty') {
+      // Faculty can access marks for students they registered
+      const User = require("../models/User");
+      const student = await User.findById(requestedStudentId);
+      if (!student || student.facultyId.toString() !== req.user.id.toString()) {
+        return res.status(403).json({ error: "Access forbidden: Cannot access other faculty's students' marks" });
+      }
+    }
+    
+    const data = await Marks.find({ studentId: requestedStudentId });
     res.json(data);
   } catch (error) {
     console.error("Error fetching student marks:", error);
@@ -66,7 +84,7 @@ router.get("/student/:id", async (req, res) => {
   }
 });
 
-router.get("/stats/:course", async (req, res) => {
+router.get("/stats/:course", authenticateToken, async (req, res) => {
   try {
     const marks = await Marks.find({ course: req.params.course });
 
@@ -86,10 +104,15 @@ router.get("/stats/:course", async (req, res) => {
   }
 });
 
-router.get("/faculty-stats/:course/:facultyId", async (req, res) => {
+router.get("/faculty-stats/:course/:facultyId", authenticateToken, async (req, res) => {
   try {
     const { course, facultyId } = req.params;
-  
+    
+    // Ensure the requesting user can only access their own stats
+    if (req.user.id.toString() !== facultyId.toString()) {
+      return res.status(403).json({ error: "Access forbidden: Cannot access other faculty's course statistics" });
+    }
+    
     const User = require("../models/User");
     const students = await User.find({ role: "student", facultyId });
     const studentIds = students.map(s => s._id);

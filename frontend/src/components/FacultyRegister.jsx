@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../utils/api";
 import { useState } from "react";
 
 export default function FacultyRegister({ onBack }) {
@@ -35,7 +35,7 @@ export default function FacultyRegister({ onBack }) {
 
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:3001/api/auth/register", {
+      const response = await api.post("/auth/register", {
         name: formData.name.trim(),
         email: formData.email.toLowerCase().trim(),
         password: formData.password,
@@ -45,6 +45,12 @@ export default function FacultyRegister({ onBack }) {
 
       setSuccess("Faculty registered successfully! You can now login.");
       setFormData({ name: "", email: "", password: "", department: "" });
+      
+      // Store user data and token if auto-login is desired
+      if (response.data.token) {
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        localStorage.setItem("token", response.data.token);
+      }
       
       // Redirect to login after 2 seconds
       setTimeout(() => {

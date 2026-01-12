@@ -3,15 +3,14 @@ import AddMarks from "./AddMarks";
 import RegisterStudent from "./RegisterStudent";
 import ClassAnalytics from "./ClassAnalytics";
 
-export default function FacultyDashboard() {
+export default function FacultyDashboard({ user }) {
   const [activeTab, setActiveTab] = useState("students");
   
   const logout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("token");
     window.location.reload();
   };
-
-  const user = JSON.parse(localStorage.getItem("user"));
 
   const tabs = [
     { id: "students", label: "My Students", icon: "" },
