@@ -9,10 +9,20 @@ const marksRoutes = require("./routes/marks");
 const app = express();
 
 // Enable CORS for all routes
+// app.use(cors({
+//   origin: process.env.FRONTEND_URL || "http://localhost:5173",
+//   credentials: true
+// }));
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:5173",
+  origin: [
+    process.env.FRONTEND_URL,
+    "http://localhost:5173"
+  ].filter(Boolean),
   credentials: true
 }));
+
+
 app.use(express.json());
 
 // Connect to MongoDB with environment variable (Atlas cluster only - no local fallback)
